@@ -1,0 +1,61 @@
+# Dependencias
+FROM node:22-alpine3.19 as deps
+
+WORKDIR /usr/src/app
+
+# Install pnpm globally
+RUN npm install -g pnpm
+
+COPY package.json pnpm-lock.yaml ./
+
+RUN pnpm install
+
+# Builder - Construye la aplicación
+FROM node:22-alpine3.19 as build
+
+ARG ORDERS_DATABASE_URL
+ENV DATABASE_URL=$ORDERS_DATABASE_URL
+
+# Print the arg to see the received value
+RUN echo "database_url ::: $ORDERS_DATABASE_URL"
+
+WORKDIR /usr/src/app
+
+# Install pnpm globally in the build stage
+RUN npm install -g pnpm
+
+# Copy from deps, the node_modules
+COPY --from=deps /usr/src/app/node_modules ./node_modules
+
+# Copy all application source code
+COPY . .
+
+RUN pnpm prisma migrate deploy
+RUN pnpm prisma generate
+
+# Run tests (optional, uncomment if needed)
+# RUN pnpm run test
+
+# Build the application
+RUN pnpm run build
+
+RUN pnpm prune --prod
+
+# Crear la imagen final de Docker
+FROM node:22-alpine3.19 as prod
+
+WORKDIR /usr/src/app
+
+# Copy the node_modules from the build stage
+COPY --from=build /usr/src/app/node_modules ./node_modules
+
+# Copy the dist folder
+COPY --from=build /usr/src/app/dist ./dist
+
+ENV NODE_ENV=production
+
+USER node
+
+EXPOSE 3000
+
+CMD ["node", "dist/main.js"]
