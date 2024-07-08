@@ -45,7 +45,7 @@ export class UsersController {
     return this.usersService.findOneWithMeta(id);
   }
 
-  @MessagePattern('users.find.id.summary')
+  @MessagePattern('users.find.summary')
   findOneWithSummary(@Payload('id', ParseUUIDPipe) id: string) {
     return this.usersService.findOneWithSummary(id);
   }

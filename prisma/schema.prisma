@@ -20,15 +20,15 @@ model User {
   password String
   roles    Role[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
 
-  createdBy String?
+  createdBy String? @map("created_by")
   creator   User?   @relation("UserCreator", fields: [createdBy], references: [id])
   creatorOf User[]  @relation("UserCreator")
 
-  @@map("users")
+  @@map("user")
 }
 
 enum Role {
