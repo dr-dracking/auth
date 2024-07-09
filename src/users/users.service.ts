@@ -38,7 +38,7 @@ export class UsersService extends PrismaClient implements OnModuleInit {
 
     return {
       meta: { total, page, lastPage },
-      data,
+      data: data.map((item) => ObjectManipulator.exclude(item, ['password'])),
     };
   }
 
