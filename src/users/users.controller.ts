@@ -1,9 +1,9 @@
 import { Controller, ParseUUIDPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { PaginationDto } from 'src/common';
+import { CreateUserDto, UpdateUserDto } from './dto';
 import { User } from './interfaces';
 import { UsersService } from './users.service';
-import { CreateUserDto, UpdateUserDto } from './dto';
-import { PaginationDto } from 'src/common';
 
 @Controller()
 export class UsersController {
