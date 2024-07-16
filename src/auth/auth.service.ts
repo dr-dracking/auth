@@ -76,7 +76,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         token: await this.signToken({ id: user.id }),
       };
     } catch (error) {
-      console.log(error);
+      this.logger.error(error.message, error.stack);
       throw new RpcException({
         status: HttpStatus.UNAUTHORIZED,
         message: 'Invalid token',
