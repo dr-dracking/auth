@@ -1,8 +1,7 @@
-dist/
-
-node_modules/
-
-.env
-.env.*
-
-.vscode/
+node_modules
+dist
+Dockerfile
+.dockerignore
+README.md
+*.log
+*.md
